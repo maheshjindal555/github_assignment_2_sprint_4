@@ -1,9 +1,7 @@
-name : terraform workflow
+name : terraform destroy workflow
 
 on :
-  # push : 
-  #   branches : ["master"]
-  
+ 
   workflow_dispatch:
     inputs : 
       region :
@@ -17,7 +15,6 @@ env :
 
 jobs :
   destroy : 
-    needs: init-plan-apply
     runs-on : ubuntu-latest
     steps:
       - uses: actions/checkout@v3 
