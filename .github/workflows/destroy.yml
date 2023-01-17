@@ -14,9 +14,10 @@ env :
   bucket : mahesh02
   tfstate_file : new.tfstate
   region: ${{ github.event.inputs.region }}
-  
+
 jobs :
-  init-plan-apply : 
+  destroy : 
+    needs: init-plan-apply
     runs-on : ubuntu-latest
     steps:
       - uses: actions/checkout@v3 
@@ -31,18 +32,11 @@ jobs :
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.region }}
 
-      - name: init
+      - name : init
         run: |
           cd S3-Bucket
           terraform init -reconfigure -backend-config="bucket=${{ env.bucket }}" -backend-config="key=${{ env.tfstate_file}}" -backend-config="region=${{ env.region }}"
-      
-
-      - name: plan
+      - name: destroy
         run: |
           cd S3-Bucket
-          terraform plan
-        
-      - name: apply
-        run: |
-          cd S3-Bucket
-          terraform apply -auto-approve
+          terraform destroy -auto-approve   
